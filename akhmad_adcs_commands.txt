@@ -1,0 +1,67 @@
+
+
+
+
+source install/setup.bash
+
+
+
+
+#build colcon
+colcon build --symlink-install
+
+
+
+#list gazebo topics
+gz topic -l
+
+#provide the file path as a valid gazebo plugin path
+export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:~/ADCS_ws/install/world_plugin/lib
+
+
+#get gazebo plugin path for current terminal 
+echo $GAZEBO_PLUGIN_PATH
+
+
+
+
+
+
+
+
+#runs the project launcher
+ros2 launch akhmad_bot rsp.launch.py use_sim_time:=true
+
+
+
+#launch world less (for world add world:=src/world/<world name>  )
+ros2 launch adcs_sstl launch_sim_adcs.launch.py world:=src/adcs_sstl/worlds/space1
+#joystick
+ros2 launch akhmad_bot joystick.launch.py
+#keyboard
+ros2 run teleop_twist_keyboard teleop_twist_keyboard  --ros-args -r /cmd_vel:=/diff_cont/cmd_vel_unstamped
+
+
+
+
+
+
+
+
+##git commands do in AKhmad_gaz_bot_ws/src/akhmad_bot
+git status (shows changes in red)
+git add .(add all don't forget the .)
+git status (all green)
+git commit -m "put a message here"
+git push
+
+
+
+
+#check controllers & braodcasters
+ros2 run controller_manager spawner.py diff_cont
+ros2 run controller_manager spawner.py <name>
+
+
+
+
